@@ -11,9 +11,15 @@ config_version=5
 [application]
 
 config/name="Tetris"
+run/main_scene="uid://dhuv0eqi72dkg"
 config/features=PackedStringArray("4.5", "Mobile")
 config/icon="uid://shhrc34hycxf"
 
+[autoload]
+
+Enums="*res://scripts/enums.gd"
+
 [rendering]
 
+textures/canvas_textures/default_texture_filter=0
 renderer/rendering_method="mobile"
