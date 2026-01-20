@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3 uid="uid://buntedhlnhldp"]
+
+[ext_resource type="Script" uid="uid://cpl4cf522aoo5" path="res://scripts/shape.gd" id="1_g71vg"]
+[ext_resource type="PackedScene" uid="uid://cc2yx1dp8lkrk" path="res://scenes/block.tscn" id="2_yy2ic"]
+
+[node name="ShapeL" type="Area2D"]
+script = ExtResource("1_g71vg")
+
+[node name="Block1" parent="." instance=ExtResource("2_yy2ic")]
+
+[node name="Block2" parent="." instance=ExtResource("2_yy2ic")]
+position = Vector2(-32, 0)
+
+[node name="Block3" parent="." instance=ExtResource("2_yy2ic")]
+position = Vector2(-32, -32)
+
+[node name="Block4" parent="." instance=ExtResource("2_yy2ic")]
+position = Vector2(-32, -64)

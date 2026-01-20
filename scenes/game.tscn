@@ -12,4 +12,12 @@ follow_viewport_enabled = true
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(165, 325)
-zoom = Vector2(0.95, 0.95)
+zoom = Vector2(0.92, 0.92)
+
+[node name="Shapes" type="Node" parent="."]
+
+[node name="WorldTimer" type="Timer" parent="."]
+wait_time = 0.6
+autostart = true
+
+[connection signal="timeout" from="WorldTimer" to="." method="_on_world_timer_timeout"]

@@ -1,8 +1,30 @@
-[gd_scene load_steps=2 format=3 uid="uid://cc2yx1dp8lkrk"]
+[gd_scene load_steps=3 format=3 uid="uid://cc2yx1dp8lkrk"]
 
 [ext_resource type="Script" uid="uid://dpx8u8t7ctajs" path="res://scripts/block.gd" id="1_8r6n6"]
 
-[node name="Block" type="Node2D"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8r6n6"]
+size = Vector2(32, 32)
+
+[node name="Block" type="Area2D"]
 script = ExtResource("1_8r6n6")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_8r6n6")
+
+[node name="RayCast1" type="RayCast2D" parent="."]
+target_position = Vector2(0, 32)
+collide_with_areas = true
+
+[node name="RayCast2" type="RayCast2D" parent="."]
+target_position = Vector2(32, 0)
+collide_with_areas = true
+
+[node name="RayCast3" type="RayCast2D" parent="."]
+target_position = Vector2(0, -32)
+collide_with_areas = true
+
+[node name="RayCast4" type="RayCast2D" parent="."]
+target_position = Vector2(-32, 0)
+collide_with_areas = true

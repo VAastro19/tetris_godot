@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3 uid="uid://bs4rlq4omj2py"]
+
+[ext_resource type="Script" uid="uid://cpl4cf522aoo5" path="res://scripts/shape.gd" id="1_wfhoh"]
+[ext_resource type="PackedScene" uid="uid://cc2yx1dp8lkrk" path="res://scenes/block.tscn" id="2_7ji7l"]
+
+[node name="ShapeO" type="Area2D"]
+script = ExtResource("1_wfhoh")
+
+[node name="Block1" parent="." instance=ExtResource("2_7ji7l")]
+
+[node name="Block2" parent="." instance=ExtResource("2_7ji7l")]
+position = Vector2(0, -32)
+
+[node name="Block3" parent="." instance=ExtResource("2_7ji7l")]
+position = Vector2(32, -32)
+
+[node name="Block4" parent="." instance=ExtResource("2_7ji7l")]
+position = Vector2(32, 0)

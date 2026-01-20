@@ -1,14 +1,24 @@
-[gd_scene load_steps=3 format=3 uid="uid://b2y856qjueva5"]
+[gd_scene load_steps=4 format=3 uid="uid://b2y856qjueva5"]
 
 [ext_resource type="Texture2D" uid="uid://dxcb8e8mhtbfq" path="res://assets/graphics/screen.png" id="1_nt7q6"]
 [ext_resource type="Texture2D" uid="uid://btvsngl80gd1s" path="res://assets/graphics/background.png" id="1_x4jx1"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_x4jx1"]
+size = Vector2(330, 30)
 
 [node name="UI" type="CanvasLayer"]
 
 [node name="Background" type="Sprite2D" parent="."]
 position = Vector2(165, 325)
+scale = Vector2(1.2, 1.2)
 texture = ExtResource("1_x4jx1")
 
 [node name="Screen" type="Sprite2D" parent="."]
 position = Vector2(165, 325)
 texture = ExtResource("1_nt7q6")
+
+[node name="Edge" type="StaticBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Edge"]
+position = Vector2(165, 660)
+shape = SubResource("RectangleShape2D_x4jx1")
