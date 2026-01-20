@@ -11,15 +11,47 @@ var l_scene: PackedScene = preload("res://scenes/shapes/shape_l.tscn")
 var j_scene: PackedScene = preload("res://scenes/shapes/shape_j.tscn")
 
 var controller: Shape
+var can_control: bool = true
+var levels: Dictionary[int, float] = {
+	0: -21,
+	1: -53,
+	2: -85,
+	3: -117,
+	4: -149,
+	5: -181,
+	6: -213,
+	7: -245,
+	8: -277,
+	9: -309,
+	10: -341,
+	11: -373,
+	12: -405,
+	13: -437,
+	14: -469,
+	15: -501,
+	16: -533,
+	17: -565,
+	18: -597,
+	19: -629
+	}
+
+func _ready() -> void:
+	controller = generate_shape(pick_random_shape(), pick_random_color(), Vector2(53, 21))
 
 func _process(_delta: float) -> void:
-	if Input.is_action_just_pressed("rotate"):
-		print("generating shape")
-		controller = generate_shape(Enums.BlockShape.L, Enums.BlockColor.GREEN, Vector2(53, 21))
-	if Input.is_action_pressed("left") and controller:
-		pass
-	if Input.is_action_pressed("right") and controller:
-		pass
+
+	if Input.is_action_pressed("left"):
+		if can_control and controller:
+			controller.move_left()
+			can_control = false
+			
+	if Input.is_action_pressed("right"):
+		if can_control and controller:
+			controller.move_right()
+			can_control = false
+	
+	if controller.is_controlled == false:
+		controller = generate_shape(pick_random_shape(), pick_random_color(), Vector2(53, 21))
 
 ## Generates a shape based on provided type, color at given position
 func generate_shape(shape: Enums.BlockShape, shape_color: Enums.BlockColor, pos: Vector2) -> Shape:
@@ -77,8 +109,35 @@ func generate_shape(shape: Enums.BlockShape, shape_color: Enums.BlockColor, pos:
 		_:
 			return
 
+## Picks random shape for generation
+func pick_random_shape() -> Enums.BlockShape:
+	var shapes_list =  [
+		Enums.BlockShape.I,
+		Enums.BlockShape.T,
+		Enums.BlockShape.O,
+		Enums.BlockShape.Z,
+		Enums.BlockShape.S,
+		Enums.BlockShape.L,
+		Enums.BlockShape.J
+	]
+	return shapes_list.pick_random()
+
+## Picks random color for generation
+func pick_random_color() -> Enums.BlockColor:
+	var colors_list = [
+		Enums.BlockColor.BLUE,
+		Enums.BlockColor.PURPLE,
+		Enums.BlockColor.GREEN,
+		Enums.BlockColor.YELLOW,
+		Enums.BlockColor.RED
+	]
+	return colors_list.pick_random()
+
 ## Moves all the blocks after set interval passes
 func _on_world_timer_timeout() -> void:
 	var shapes = $Shapes.get_children()
 	for shape in shapes:
 		shape.fall()
+
+func _on_player_input_timer_timeout() -> void:
+	can_control = true

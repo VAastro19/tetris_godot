@@ -1,5 +1,5 @@
-1. Player input (move left-right)
-2. Rotation of shapes + fix side raycasts triggering stop
-3. Accelerate shape fall
-4. Automatic shape generation
-5. Remove full lines and update map
+Fix side raycasts triggering stop
+Accelerate shape fall
+Automatic shape generation (locations)
+Rotation of shapes 
+Remove full lines and update map

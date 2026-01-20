@@ -2,7 +2,7 @@
 extends Area2D
 class_name Block
 
-const block_size: int = 32
+const size: int = 32
 
 # Make blocks above screen invisible
 func _process(_delta: float) -> void:
@@ -13,12 +13,12 @@ func _process(_delta: float) -> void:
 
 ## Moves block by one grid coord down
 func fall() -> void:
-	position.y += block_size
+	position.y += size
 
 ## Moves block by one grid coord to the left
 func move_left() -> void:
-	position.x -= block_size
+	position.x -= size
 
 ## Moves block by one grid coord to the right
 func move_right() -> void:
-	position.x += block_size
+	position.x += size

@@ -20,4 +20,9 @@ zoom = Vector2(0.92, 0.92)
 wait_time = 0.6
 autostart = true
 
+[node name="PlayerInputTimer" type="Timer" parent="."]
+wait_time = 0.1
+autostart = true
+
 [connection signal="timeout" from="WorldTimer" to="." method="_on_world_timer_timeout"]
+[connection signal="timeout" from="PlayerInputTimer" to="." method="_on_player_input_timer_timeout"]

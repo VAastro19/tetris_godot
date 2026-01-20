@@ -9,6 +9,9 @@ var green: Texture2D = load("res://assets/graphics/blocks/green.png")
 var yellow: Texture2D = load("res://assets/graphics/blocks/yellow.png")
 var red: Texture2D = load("res://assets/graphics/blocks/red.png")
 
+const left_edge: int = 5
+const right_edge: int = 325
+
 var blocks: Array = []
 var raycasts: Array[RayCast2D] = []
 var block_color: Enums.BlockColor
@@ -22,23 +25,41 @@ func _ready() -> void:
 
 ## If no detection with outside surface is detected, moves all the blocks
 func fall() -> void:
-	if check_can_move():
+	var can_move: bool = true
+	for raycast in raycasts:
+		if raycast.is_colliding():
+			if raycast.get_collider() not in blocks:
+				can_move = false
+				is_controlled = false
+				
+	if can_move:
 		for block in blocks:
 			block.fall()
 
 ## If possible moves all the blocks within a shape to the left
 func move_left() -> void:
-	if check_can_move():
+	if check_side_move():
+		var can_move: bool = true
 		for block in blocks:
-			block.move_left()
+			if block.global_position.x - block.size <= left_edge:
+				can_move = false
+		if can_move:
+			for block in blocks:
+				block.move_left()
 
 ## If possible moves all the blocks within a shape to the right
 func move_right() -> void:
-	if check_can_move():
+	if check_side_move():
+		var can_move: bool = true
 		for block in blocks:
-			block.move_left()
+			if block.global_position.x + block.size >= right_edge:
+				can_move = false
+		if can_move:
+			for block in blocks:
+				block.move_right()
 
-func check_can_move() -> bool:
+## Check if shape can move (no collisions from other shapes or the floor)
+func check_side_move() -> bool:
 	var can_move: bool = true
 	for raycast in raycasts:
 		if raycast.is_colliding():
