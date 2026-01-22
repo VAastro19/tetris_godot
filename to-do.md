@@ -1,5 +1,3 @@
-Fix side raycasts triggering stop
-Accelerate shape fall
+Fix rotations
 Automatic shape generation (locations)
-Rotation of shapes 
 Remove full lines and update map

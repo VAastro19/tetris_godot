@@ -7,12 +7,12 @@
 script = ExtResource("1_b5fvx")
 
 [node name="Block1" parent="." instance=ExtResource("2_jo0fv")]
+position = Vector2(0, 32)
 
 [node name="Block2" parent="." instance=ExtResource("2_jo0fv")]
-position = Vector2(0, -32)
 
 [node name="Block3" parent="." instance=ExtResource("2_jo0fv")]
-position = Vector2(-32, -32)
+position = Vector2(-32, 0)
 
 [node name="Block4" parent="." instance=ExtResource("2_jo0fv")]
-position = Vector2(-32, -64)
+position = Vector2(-32, -32)

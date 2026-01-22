@@ -11,6 +11,8 @@ var red: Texture2D = load("res://assets/graphics/blocks/red.png")
 
 const left_edge: int = 5
 const right_edge: int = 325
+const bottom_edge: int = 645
+const block_size: int = 32
 
 var blocks: Array = []
 var raycasts: Array[RayCast2D] = []
@@ -27,45 +29,63 @@ func _ready() -> void:
 func fall() -> void:
 	var can_move: bool = true
 	for raycast in raycasts:
-		if raycast.is_colliding():
-			if raycast.get_collider() not in blocks:
+		if raycast.is_colliding() and raycast.get_collider() not in blocks:
+			if raycast.get_collider().global_position.y > raycast.global_position.y:
 				can_move = false
 				is_controlled = false
-				
+				break
+			if raycast.get_collider() is StaticBody2D:
+				can_move = false
+				is_controlled = false
+				break
 	if can_move:
-		for block in blocks:
-			block.fall()
+		global_position.y += block_size
 
 ## If possible moves all the blocks within a shape to the left
 func move_left() -> void:
-	if check_side_move():
-		var can_move: bool = true
-		for block in blocks:
-			if block.global_position.x - block.size <= left_edge:
+	var can_move: bool = true
+	for raycast in raycasts:
+		if raycast.is_colliding() and raycast.get_collider() not in blocks:
+			if raycast.get_collider().global_position.x < raycast.global_position.x:
 				can_move = false
-		if can_move:
-			for block in blocks:
-				block.move_left()
+				break
+	for block in blocks:
+		if block.global_position.x - block_size <= left_edge:
+			can_move = false
+			break
+	if can_move:
+		global_position.x -= block_size
 
 ## If possible moves all the blocks within a shape to the right
 func move_right() -> void:
-	if check_side_move():
-		var can_move: bool = true
-		for block in blocks:
-			if block.global_position.x + block.size >= right_edge:
-				can_move = false
-		if can_move:
-			for block in blocks:
-				block.move_right()
-
-## Check if shape can move (no collisions from other shapes or the floor)
-func check_side_move() -> bool:
 	var can_move: bool = true
 	for raycast in raycasts:
-		if raycast.is_colliding():
-			if raycast.get_collider() not in blocks:
+		if raycast.is_colliding() and raycast.get_collider() not in blocks:
+			if raycast.get_collider().global_position.x > raycast.global_position.x:
 				can_move = false
-	return can_move
+				break
+	for block in blocks:
+		if block.global_position.x + block_size >= right_edge:
+			can_move = false
+			break
+	if can_move:
+		global_position.x += block_size
+
+## Rotate shape clockwise
+func rotate_shape() -> void:
+	rotation_degrees += 90
+	for block in blocks:
+		var internal_raycast: RayCast2D = block.get_node("InternalRayCast")
+		if internal_raycast.is_colliding():
+			print("collision!")		# fsr collision isnt detected
+			rotation_degrees -= 90
+			break
+		while block.global_position.x < left_edge:
+			move_right()
+		while block.global_position.x > right_edge:
+			move_left()
+		while block.global_position.y > bottom_edge:
+			global_position.y -= block_size
 
 ## Sets the color of the shape based on input
 func set_color(color: Enums.BlockColor) -> void:
@@ -99,7 +119,7 @@ func get_raycasts() -> Array[RayCast2D]:
 	var new_raycasts: Array[RayCast2D] = []
 	for block in blocks:
 		for child in block.get_children():
-			if child is RayCast2D:
+			if child is RayCast2D and child != block.get_node("InternalRayCast"):
 				new_raycasts.append(child)
 	return new_raycasts
 

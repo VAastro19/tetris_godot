@@ -36,7 +36,7 @@ var levels: Dictionary[int, float] = {
 	}
 
 func _ready() -> void:
-	controller = generate_shape(pick_random_shape(), pick_random_color(), Vector2(53, 21))
+	controller = generate_shape(pick_random_shape(), pick_random_color(), Vector2(53, -11))
 
 func _process(_delta: float) -> void:
 
@@ -50,8 +50,16 @@ func _process(_delta: float) -> void:
 			controller.move_right()
 			can_control = false
 	
+	if Input.is_action_pressed("down"):
+		Engine.time_scale = 10.0
+	else:
+		Engine.time_scale = 1.0
+	
+	if Input.is_action_just_pressed("rotate"):
+		controller.rotate_shape()
+	
 	if controller.is_controlled == false:
-		controller = generate_shape(pick_random_shape(), pick_random_color(), Vector2(53, 21))
+		controller = generate_shape(pick_random_shape(), pick_random_color(), Vector2(53, -11))
 
 ## Generates a shape based on provided type, color at given position
 func generate_shape(shape: Enums.BlockShape, shape_color: Enums.BlockColor, pos: Vector2) -> Shape:
