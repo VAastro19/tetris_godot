@@ -2,13 +2,6 @@
 extends Node2D
 class_name Shape
 
-# Preloads all of the possible colors for shapes
-var blue: Texture2D = load("res://assets/graphics/blocks/blue.png")
-var purple: Texture2D = load("res://assets/graphics/blocks/purple.png")
-var green: Texture2D = load("res://assets/graphics/blocks/green.png")
-var yellow: Texture2D = load("res://assets/graphics/blocks/yellow.png")
-var red: Texture2D = load("res://assets/graphics/blocks/red.png")
-
 const left_edge: int = 5
 const right_edge: int = 325
 const bottom_edge: int = 645
@@ -16,14 +9,16 @@ const block_size: int = 32
 
 var blocks: Array = []
 var raycasts: Array[RayCast2D] = []
-var block_color: Enums.BlockColor
+var shape_color: Enums.BlockColor
 var is_controlled: bool = true
 
 # Fills arrays with data and sets the color of the shape
 func _ready() -> void:
 	blocks = get_children()
 	raycasts = get_raycasts()
-	set_color(block_color)
+	set_shape_color(shape_color)
+	for block in blocks:
+		block.add_to_group("Blocks")
 
 ## If no detection with outside surface is detected, moves all the blocks
 func fall() -> void:
@@ -76,8 +71,8 @@ func rotate_shape() -> void:
 	rotation_degrees += 90
 	for block in blocks:
 		var internal_raycast: RayCast2D = block.get_node("InternalRayCast")
-		if internal_raycast.is_colliding():
-			print("collision!")		# fsr collision isnt detected
+		internal_raycast.force_raycast_update()
+		if internal_raycast.is_colliding() and internal_raycast.get_collider() not in blocks:
 			rotation_degrees -= 90
 			break
 		while block.global_position.x < left_edge:
@@ -88,31 +83,13 @@ func rotate_shape() -> void:
 			global_position.y -= block_size
 
 ## Sets the color of the shape based on input
-func set_color(color: Enums.BlockColor) -> void:
+func set_shape_color(color: Enums.BlockColor) -> void:
 	for block in blocks:
-		match color:
-			
-			Enums.BlockColor.BLUE:
-				block.get_node("Sprite2D").texture = blue
-				
-			Enums.BlockColor.PURPLE:
-				block.get_node("Sprite2D").texture = purple
-				
-			Enums.BlockColor.GREEN:
-				block.get_node("Sprite2D").texture = green
-				
-			Enums.BlockColor.YELLOW:
-				block.get_node("Sprite2D").texture = yellow
-				
-			Enums.BlockColor.RED:
-				block.get_node("Sprite2D").texture = red
-				
-			_:
-				block.get_node("Sprite2D").texture = red
+		block.set_block_color(color)
 
 ## Returns the color of the shape
-func get_color() -> Enums.BlockColor:
-	return block_color
+func get_shape_color() -> Enums.BlockColor:
+	return shape_color
 
 ## Collects all of the raycasts into a single array
 func get_raycasts() -> Array[RayCast2D]:
@@ -124,9 +101,9 @@ func get_raycasts() -> Array[RayCast2D]:
 	return new_raycasts
 
 ## Removes a block from the shape and updates all of the arrays after. Removes the shape if there are no blocks left
-func remove_block(block: Block) -> void:
+func remove_shape(block: Block) -> void:
 	blocks.erase(block)
-	block.queue_free()
+	block.disappear()
 	if blocks.is_empty():
 		queue_free()
 	get_raycasts()

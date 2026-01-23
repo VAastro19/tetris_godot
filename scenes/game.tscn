@@ -17,11 +17,11 @@ zoom = Vector2(0.92, 0.92)
 [node name="Shapes" type="Node" parent="."]
 
 [node name="WorldTimer" type="Timer" parent="."]
-wait_time = 0.6
+wait_time = 0.5
 autostart = true
 
 [node name="PlayerInputTimer" type="Timer" parent="."]
-wait_time = 0.1
+wait_time = 0.15
 autostart = true
 
 [connection signal="timeout" from="WorldTimer" to="." method="_on_world_timer_timeout"]

@@ -1,3 +1,2 @@
-Fix rotations
-Automatic shape generation (locations)
-Remove full lines and update map
+Remove full lines and update map (needs fixing)
+Lose condition

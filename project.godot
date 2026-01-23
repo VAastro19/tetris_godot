@@ -19,6 +19,10 @@ config/icon="uid://shhrc34hycxf"
 
 Enums="*res://scripts/enums.gd"
 
+[global_group]
+
+Blocks="All the instanced blocks"
+
 [input]
 
 left={

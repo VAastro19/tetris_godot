@@ -10,33 +10,35 @@ var s_scene: PackedScene = preload("res://scenes/shapes/shape_s.tscn")
 var l_scene: PackedScene = preload("res://scenes/shapes/shape_l.tscn")
 var j_scene: PackedScene = preload("res://scenes/shapes/shape_j.tscn")
 
+const starting_pos: Vector2 = Vector2(149, -11)
+
 var controller: Shape
 var can_control: bool = true
-var levels: Dictionary[int, float] = {
-	0: -21,
-	1: -53,
-	2: -85,
-	3: -117,
-	4: -149,
-	5: -181,
-	6: -213,
-	7: -245,
-	8: -277,
-	9: -309,
-	10: -341,
-	11: -373,
-	12: -405,
-	13: -437,
-	14: -469,
-	15: -501,
-	16: -533,
-	17: -565,
-	18: -597,
-	19: -629
+var rows: Dictionary[int, float] = {
+	0: 21,
+	1: 53,
+	2: 85,
+	3: 117,
+	4: 149,
+	5: 181,
+	6: 213,
+	7: 245,
+	8: 277,
+	9: 309,
+	10: 341,
+	11: 373,
+	12: 405,
+	13: 437,
+	14: 469,
+	15: 501,
+	16: 533,
+	17: 565,
+	18: 597,
+	19: 629
 	}
 
 func _ready() -> void:
-	controller = generate_shape(pick_random_shape(), pick_random_color(), Vector2(53, -11))
+	controller = generate_shape(pick_random_shape(), pick_random_color(), starting_pos)
 
 func _process(_delta: float) -> void:
 
@@ -59,58 +61,63 @@ func _process(_delta: float) -> void:
 		controller.rotate_shape()
 	
 	if controller.is_controlled == false:
-		controller = generate_shape(pick_random_shape(), pick_random_color(), Vector2(53, -11))
+		controller = generate_shape(Enums.BlockShape.I, pick_random_color(), starting_pos)
+
+	for row in rows:
+		if is_full(rows[row]):
+			print("full line!")
+			remove_line(rows[row])
 
 ## Generates a shape based on provided type, color at given position
-func generate_shape(shape: Enums.BlockShape, shape_color: Enums.BlockColor, pos: Vector2) -> Shape:
+func generate_shape(shape: Enums.BlockShape, color: Enums.BlockColor, pos: Vector2) -> Shape:
 	match shape:
 		
 		Enums.BlockShape.I:
 			var i_shape = i_scene.instantiate() as Shape
-			i_shape.block_color = shape_color
-			i_shape.position = pos
+			i_shape.shape_color = color
+			i_shape.global_position = pos
 			$Shapes.add_child(i_shape)
 			return i_shape
 
 		Enums.BlockShape.T:
 			var t_shape = t_scene.instantiate() as Shape
-			t_shape.block_color = shape_color
-			t_shape.position = pos
+			t_shape.shape_color = color
+			t_shape.global_position = pos
 			$Shapes.add_child(t_shape)
 			return t_shape
 			
 		Enums.BlockShape.O:
 			var o_shape = o_scene.instantiate() as Shape
-			o_shape.block_color = shape_color
-			o_shape.position = pos
+			o_shape.shape_color = color
+			o_shape.global_position = pos
 			$Shapes.add_child(o_shape)
 			return o_shape
 			
 		Enums.BlockShape.Z:
 			var z_shape = z_scene.instantiate() as Shape
-			z_shape.block_color = shape_color
-			z_shape.position = pos
+			z_shape.shape_color = color
+			z_shape.global_position = pos
 			$Shapes.add_child(z_shape)
 			return z_shape
 			
 		Enums.BlockShape.S:
 			var s_shape = s_scene.instantiate() as Shape
-			s_shape.block_color = shape_color
-			s_shape.position = pos
+			s_shape.shape_color = color
+			s_shape.global_position = pos
 			$Shapes.add_child(s_shape)
 			return s_shape
 			
 		Enums.BlockShape.L:
 			var l_shape = l_scene.instantiate() as Shape
-			l_shape.block_color = shape_color
-			l_shape.position = pos
+			l_shape.shape_color = color
+			l_shape.global_position = pos
 			$Shapes.add_child(l_shape)
 			return l_shape
 			
 		Enums.BlockShape.J:
 			var j_shape = j_scene.instantiate() as Shape
-			j_shape.block_color = shape_color
-			j_shape.position = pos
+			j_shape.shape_color = color
+			j_shape.global_position = pos
 			$Shapes.add_child(j_shape)
 			return j_shape
 		
@@ -140,6 +147,23 @@ func pick_random_color() -> Enums.BlockColor:
 		Enums.BlockColor.RED
 	]
 	return colors_list.pick_random()
+
+## Checks if the line is full
+func is_full(row: float) -> bool:
+	var counter: int = 0
+	for block in get_tree().get_nodes_in_group("Blocks"):
+		if block.global_position.y == row:
+			counter += 1 # does not work..
+	if counter == 10:
+		return true
+	else:
+		return false
+
+## Removes a full line
+func remove_line(row: float) -> void:
+	for block in get_tree().get_nodes_in_group("Blocks"):
+		if block.global_position.y == row:
+			block.get_parent().remove_block(block)
 
 ## Moves all the blocks after set interval passes
 func _on_world_timer_timeout() -> void:
