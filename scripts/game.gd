@@ -39,6 +39,7 @@ var rows: Dictionary[int, float] = {
 
 func _ready() -> void:
 	controller = generate_shape(pick_random_shape(), pick_random_color(), starting_pos)
+	$Music.play()
 
 func _process(_delta: float) -> void:
 
@@ -60,13 +61,9 @@ func _process(_delta: float) -> void:
 	if Input.is_action_just_pressed("rotate"):
 		controller.rotate_shape()
 	
-	if controller.is_controlled == false:
-		controller = generate_shape(Enums.BlockShape.I, pick_random_color(), starting_pos)
-
-	for row in rows:
-		if is_full(rows[row]):
-			print("full line!")
-			remove_line(rows[row])
+	if not controller or controller.is_controlled == false:
+		$PlaceSound.play()
+		controller = generate_shape(pick_random_shape(), pick_random_color(), starting_pos)
 
 ## Generates a shape based on provided type, color at given position
 func generate_shape(shape: Enums.BlockShape, color: Enums.BlockColor, pos: Vector2) -> Shape:
@@ -153,7 +150,7 @@ func is_full(row: float) -> bool:
 	var counter: int = 0
 	for block in get_tree().get_nodes_in_group("Blocks"):
 		if block.global_position.y == row:
-			counter += 1 # does not work..
+			counter += 1
 	if counter == 10:
 		return true
 	else:
@@ -161,6 +158,7 @@ func is_full(row: float) -> bool:
 
 ## Removes a full line
 func remove_line(row: float) -> void:
+	$SuccessSound.play()
 	for block in get_tree().get_nodes_in_group("Blocks"):
 		if block.global_position.y == row:
 			block.get_parent().remove_block(block)
@@ -170,6 +168,10 @@ func _on_world_timer_timeout() -> void:
 	var shapes = $Shapes.get_children()
 	for shape in shapes:
 		shape.fall()
+	if not controller or controller.is_controlled == false:
+		for row in rows:
+			if is_full(rows[row]):
+				remove_line(rows[row])
 
 func _on_player_input_timer_timeout() -> void:
 	can_control = true

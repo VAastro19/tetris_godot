@@ -1,2 +1,2 @@
-Remove full lines and update map (needs fixing)
+bug: sometimes singular blocks don't fall down
 Lose condition

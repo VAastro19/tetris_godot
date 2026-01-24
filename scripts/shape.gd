@@ -24,12 +24,8 @@ func _ready() -> void:
 func fall() -> void:
 	var can_move: bool = true
 	for raycast in raycasts:
-		if raycast.is_colliding() and raycast.get_collider() not in blocks:
-			if raycast.get_collider().global_position.y > raycast.global_position.y:
-				can_move = false
-				is_controlled = false
-				break
-			if raycast.get_collider() is StaticBody2D:
+		if raycast.is_colliding() and (raycast.get_collider() not in blocks):
+			if (raycast.get_collider().global_position.y > raycast.global_position.y) or (raycast.get_collider() is StaticBody2D):
 				can_move = false
 				is_controlled = false
 				break
@@ -81,6 +77,7 @@ func rotate_shape() -> void:
 			move_left()
 		while block.global_position.y > bottom_edge:
 			global_position.y -= block_size
+		block.rotation_degrees -= 90
 
 ## Sets the color of the shape based on input
 func set_shape_color(color: Enums.BlockColor) -> void:
@@ -101,9 +98,9 @@ func get_raycasts() -> Array[RayCast2D]:
 	return new_raycasts
 
 ## Removes a block from the shape and updates all of the arrays after. Removes the shape if there are no blocks left
-func remove_shape(block: Block) -> void:
+func remove_block(block: Block) -> void:
 	blocks.erase(block)
 	block.disappear()
 	if blocks.is_empty():
 		queue_free()
-	get_raycasts()
+	raycasts = get_raycasts()
