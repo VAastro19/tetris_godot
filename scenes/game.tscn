@@ -1,10 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://dhuv0eqi72dkg"]
+[gd_scene load_steps=5 format=3 uid="uid://dhuv0eqi72dkg"]
 
 [ext_resource type="Script" uid="uid://car2442b47fj8" path="res://scripts/game.gd" id="1_uwrxv"]
 [ext_resource type="PackedScene" uid="uid://b2y856qjueva5" path="res://scenes/ui.tscn" id="2_yqjtg"]
 [ext_resource type="AudioStream" uid="uid://1244ytn5v6ap" path="res://assets/sound/sfx/place.wav" id="3_lnu2h"]
 [ext_resource type="AudioStream" uid="uid://dowy668mjl0jr" path="res://assets/sound/sfx/success.wav" id="4_lbhrr"]
-[ext_resource type="AudioStream" uid="uid://bqcsso3uyrw7f" path="res://assets/sound/music/slow_music.mp3" id="5_iywne"]
 
 [node name="Game" type="Node2D"]
 script = ExtResource("1_uwrxv")
@@ -34,11 +33,6 @@ bus = &"SFX"
 [node name="SuccessSound" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("4_lbhrr")
 bus = &"SFX"
-
-[node name="Music" type="AudioStreamPlayer2D" parent="."]
-stream = ExtResource("5_iywne")
-bus = &"Music"
-parameters/looping = true
 
 [connection signal="timeout" from="WorldTimer" to="." method="_on_world_timer_timeout"]
 [connection signal="timeout" from="PlayerInputTimer" to="." method="_on_player_input_timer_timeout"]

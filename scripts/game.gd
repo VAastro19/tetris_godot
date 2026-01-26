@@ -39,7 +39,6 @@ var rows: Dictionary[int, float] = {
 
 func _ready() -> void:
 	controller = generate_shape(pick_random_shape(), pick_random_color(), starting_pos)
-	$Music.play()
 
 func _process(_delta: float) -> void:
 
@@ -163,6 +162,13 @@ func remove_line(row: float) -> void:
 		if block.global_position.y == row:
 			block.get_parent().remove_block(block)
 
+## Checks if blocks are stacked too high
+func lose_condition() -> bool:
+	for block in get_tree().get_nodes_in_group("Blocks"):
+		if block.global_position.y == rows[0]:
+			return true
+	return false
+
 ## Moves all the blocks after set interval passes
 func _on_world_timer_timeout() -> void:
 	var shapes = $Shapes.get_children()
@@ -172,6 +178,9 @@ func _on_world_timer_timeout() -> void:
 		for row in rows:
 			if is_full(rows[row]):
 				remove_line(rows[row])
+		if lose_condition():
+			get_tree().reload_current_scene()
+	
 
 func _on_player_input_timer_timeout() -> void:
 	can_control = true
