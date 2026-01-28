@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3 uid="uid://danlo8bt23ayb"]
+
+[ext_resource type="Script" uid="uid://cpl4cf522aoo5" path="res://scripts/shape.gd" id="1_tlx02"]
+[ext_resource type="PackedScene" uid="uid://cc2yx1dp8lkrk" path="res://scenes/block.tscn" id="2_ewqgf"]
+
+[node name="ShapeSingle" type="Area2D"]
+script = ExtResource("1_tlx02")
+
+[node name="Block1" parent="." instance=ExtResource("2_ewqgf")]

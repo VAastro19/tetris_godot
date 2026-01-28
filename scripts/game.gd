@@ -9,6 +9,7 @@ var z_scene: PackedScene = preload("res://scenes/shapes/shape_z.tscn")
 var s_scene: PackedScene = preload("res://scenes/shapes/shape_s.tscn")
 var l_scene: PackedScene = preload("res://scenes/shapes/shape_l.tscn")
 var j_scene: PackedScene = preload("res://scenes/shapes/shape_j.tscn")
+var single_scene: PackedScene = preload("res://scenes/shapes/shape_single.tscn")
 
 const starting_pos: Vector2 = Vector2(149, -11)
 
@@ -72,6 +73,7 @@ func generate_shape(shape: Enums.BlockShape, color: Enums.BlockColor, pos: Vecto
 			var i_shape = i_scene.instantiate() as Shape
 			i_shape.shape_color = color
 			i_shape.global_position = pos
+			i_shape.single_shape_scene = single_scene
 			$Shapes.add_child(i_shape)
 			return i_shape
 
@@ -79,6 +81,7 @@ func generate_shape(shape: Enums.BlockShape, color: Enums.BlockColor, pos: Vecto
 			var t_shape = t_scene.instantiate() as Shape
 			t_shape.shape_color = color
 			t_shape.global_position = pos
+			t_shape.single_shape_scene = single_scene
 			$Shapes.add_child(t_shape)
 			return t_shape
 			
@@ -86,6 +89,7 @@ func generate_shape(shape: Enums.BlockShape, color: Enums.BlockColor, pos: Vecto
 			var o_shape = o_scene.instantiate() as Shape
 			o_shape.shape_color = color
 			o_shape.global_position = pos
+			o_shape.single_shape_scene = single_scene
 			$Shapes.add_child(o_shape)
 			return o_shape
 			
@@ -93,6 +97,7 @@ func generate_shape(shape: Enums.BlockShape, color: Enums.BlockColor, pos: Vecto
 			var z_shape = z_scene.instantiate() as Shape
 			z_shape.shape_color = color
 			z_shape.global_position = pos
+			z_shape.single_shape_scene = single_scene
 			$Shapes.add_child(z_shape)
 			return z_shape
 			
@@ -100,6 +105,7 @@ func generate_shape(shape: Enums.BlockShape, color: Enums.BlockColor, pos: Vecto
 			var s_shape = s_scene.instantiate() as Shape
 			s_shape.shape_color = color
 			s_shape.global_position = pos
+			s_shape.single_shape_scene = single_scene
 			$Shapes.add_child(s_shape)
 			return s_shape
 			
@@ -107,6 +113,7 @@ func generate_shape(shape: Enums.BlockShape, color: Enums.BlockColor, pos: Vecto
 			var l_shape = l_scene.instantiate() as Shape
 			l_shape.shape_color = color
 			l_shape.global_position = pos
+			l_shape.single_shape_scene = single_scene
 			$Shapes.add_child(l_shape)
 			return l_shape
 			
@@ -114,6 +121,7 @@ func generate_shape(shape: Enums.BlockShape, color: Enums.BlockColor, pos: Vecto
 			var j_shape = j_scene.instantiate() as Shape
 			j_shape.shape_color = color
 			j_shape.global_position = pos
+			j_shape.single_shape_scene = single_scene
 			$Shapes.add_child(j_shape)
 			return j_shape
 		
@@ -148,8 +156,10 @@ func pick_random_color() -> Enums.BlockColor:
 func is_full(row: float) -> bool:
 	var counter: int = 0
 	for block in get_tree().get_nodes_in_group("Blocks"):
-		if block.global_position.y == row:
+		if block.global_position.y == row and block.get_parent() != controller:
 			counter += 1
+	print("Row: " + str(row))
+	print("Counter: " + str(counter))
 	if counter == 10:
 		return true
 	else:
@@ -174,13 +184,12 @@ func _on_world_timer_timeout() -> void:
 	var shapes = $Shapes.get_children()
 	for shape in shapes:
 		shape.fall()
+	for row in rows:
+		if is_full(rows[row]):
+			remove_line(rows[row])
 	if not controller or controller.is_controlled == false:
-		for row in rows:
-			if is_full(rows[row]):
-				remove_line(rows[row])
 		if lose_condition():
 			get_tree().reload_current_scene()
-	
 
 func _on_player_input_timer_timeout() -> void:
 	can_control = true

@@ -2,6 +2,8 @@
 extends Node2D
 class_name Shape
 
+var single_shape_scene: PackedScene
+
 const left_edge: int = 5
 const right_edge: int = 325
 const bottom_edge: int = 645
@@ -97,10 +99,39 @@ func get_raycasts() -> Array[RayCast2D]:
 				new_raycasts.append(child)
 	return new_raycasts
 
+## After removing the block, checks whether the shape has been split
+func check_for_split(removed_block: Block) -> void:
+	var above_blocks: Array = []
+	var below_blocks: Array = []
+	for block in blocks:
+		if block.global_position.y > removed_block.global_position.y:
+			below_blocks.append(block)
+		else:
+			above_blocks.append(block)
+
+	if not above_blocks.size() == 0 and not below_blocks.size() == 0:
+		if above_blocks.size() > below_blocks.size():
+			separate_from_shape(below_blocks[0])
+		elif above_blocks.size() < below_blocks.size():
+			separate_from_shape(above_blocks[0])
+		else:
+			separate_from_shape(below_blocks[0])
+			separate_from_shape(above_blocks[0])
+
+## If the split was detected, separate hanging blocks from the shape to avoid phantom spaces
+func separate_from_shape(block: Block) -> void:
+	var single_shape = single_shape_scene.instantiate() as Shape
+	single_shape.shape_color = shape_color
+	single_shape.global_position = block.global_position
+	single_shape.is_controlled = false
+	get_parent().add_child(single_shape)
+	remove_block(block)
+
 ## Removes a block from the shape and updates all of the arrays after. Removes the shape if there are no blocks left
 func remove_block(block: Block) -> void:
 	blocks.erase(block)
 	block.disappear()
 	if blocks.is_empty():
 		queue_free()
+	check_for_split(block)
 	raycasts = get_raycasts()

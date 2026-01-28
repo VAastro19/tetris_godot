@@ -1,3 +1,2 @@
-bug: when removing a block from the middle of the shape it still behaves as if it was there
-bug: sometimes side raycast triggers stop motion
+bug: upon removing a line, some blocks either reappea, or don't get removed
 Add a score system?
