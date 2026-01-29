@@ -16,8 +16,7 @@ var is_controlled: bool = true
 
 # Fills arrays with data and sets the color of the shape
 func _ready() -> void:
-	blocks = get_children()
-	raycasts = get_raycasts()
+	update()
 	set_shape_color(shape_color)
 	for block in blocks:
 		block.add_to_group("Blocks")
@@ -125,7 +124,15 @@ func separate_from_shape(block: Block) -> void:
 	single_shape.global_position = block.global_position
 	single_shape.is_controlled = false
 	get_parent().add_child(single_shape)
-	remove_block(block)
+	block.reparent(single_shape)
+	blocks.erase(block)
+	raycasts = get_raycasts()
+	single_shape.update()
+
+## Update blocks and raycasts array on demand
+func update() -> void:
+	blocks = get_children()
+	raycasts = get_raycasts()
 
 ## Removes a block from the shape and updates all of the arrays after. Removes the shape if there are no blocks left
 func remove_block(block: Block) -> void:

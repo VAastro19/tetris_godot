@@ -158,8 +158,6 @@ func is_full(row: float) -> bool:
 	for block in get_tree().get_nodes_in_group("Blocks"):
 		if block.global_position.y == row and block.get_parent() != controller:
 			counter += 1
-	print("Row: " + str(row))
-	print("Counter: " + str(counter))
 	if counter == 10:
 		return true
 	else:
@@ -183,7 +181,8 @@ func lose_condition() -> bool:
 func _on_world_timer_timeout() -> void:
 	var shapes = $Shapes.get_children()
 	for shape in shapes:
-		shape.fall()
+		if not shape.is_controlled:
+			shape.fall()
 	for row in rows:
 		if is_full(rows[row]):
 			remove_line(rows[row])
@@ -191,5 +190,11 @@ func _on_world_timer_timeout() -> void:
 		if lose_condition():
 			get_tree().reload_current_scene()
 
+## Moves the controlled shape (slower than the rest of the world)
+func _on_controller_timer_timeout() -> void:
+	if controller:
+		controller.fall()
+
+## Limits amount of actions player can take in a time interval
 func _on_player_input_timer_timeout() -> void:
 	can_control = true

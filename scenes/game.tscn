@@ -19,6 +19,10 @@ zoom = Vector2(0.92, 0.92)
 [node name="Shapes" type="Node" parent="."]
 
 [node name="WorldTimer" type="Timer" parent="."]
+wait_time = 0.2
+autostart = true
+
+[node name="ControllerTimer" type="Timer" parent="."]
 wait_time = 0.5
 autostart = true
 
@@ -35,4 +39,5 @@ stream = ExtResource("4_lbhrr")
 bus = &"SFX"
 
 [connection signal="timeout" from="WorldTimer" to="." method="_on_world_timer_timeout"]
+[connection signal="timeout" from="ControllerTimer" to="." method="_on_controller_timer_timeout"]
 [connection signal="timeout" from="PlayerInputTimer" to="." method="_on_player_input_timer_timeout"]
